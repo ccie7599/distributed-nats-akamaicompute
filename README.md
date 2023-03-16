@@ -39,6 +39,68 @@ Before we deploy NATS.io and Prometheus (Prometheus collects and federates stati
 ```kubectl get svc prometheus-lb -o jsonpath="{.status.loadBalancer.ingress[*].ip}"```
 ```kubectl get svc natsio-lb -o jsonpath="{.status.loadBalancer.ingress[*].ip}"```
 
+## Deploying NATS.io 
+
+NATS.io can be flexibly deployed to satisify different message and data patterns, depending on the use case. For example, a data broadcast fan-out solution of real-time sports scores will have a different design than an IoT command-and-control application that requires guaranteed message delivery. 
+
+The design that this cookbook has the following architecture
+
+* Single LKE clusters in each region, that host 3-pod replicasets of the NATS.io server. These pods communicate via NATS.io "cluster mode", where message data is kept strongly consistent across all partitions and subjects. More on cluster mode here - https://docs.nats.io/running-a-nats-service/configuration/clustering. 
+
+* Each cluster connects to every other cluster via NATS.io "gateway mode." Gateway mode can be configured for various types of "interest sharing" (NATS.io terminology for topic or partition sharing), depending on the requirements of the use case. More on gateway mode here - https://docs.nats.io/running-a-nats-service/configuration/gateways.
+
+This design provides for autoscaling ability within each region, to handle dynamic client load, along with inter-region distribution of messages in a reliable, performant manner. 
+
+We will first create a local helm chart and add the public NATS.io helm chart as a dependency. 
+
+1. Create a local helm chart labeled "mynats"
+
+`helm create mynats`
+
+2. Switch to the mynats directory `cd mynats` and update `Chart.yaml` with the following codeblock.
+
+```
+dependencies:
+- name: nats
+  version: 0.18.0
+  repository: https://nats-io.github.io/k8s/helm/charts/
+```
+3. Run `helm dep update` to pull down the NATS.io helm chart locally. 
+
+4. Create a region-specific file based on `values.yaml`. Add the following codeblock to the file. Note, the codeblock needs to be customized per-region-
+
+* `nats.gateway.name` must be updated with a unique per-region value. 
+* `nats.gateway.gateways` sections much be added for each region in use. The NATS.io load balancer IP address for each region, recorded earlier, would be used as the `nats.gateway.gateways.urls` value, in this format `- nats://{IPaddress}:7522`
+
+The below codeblock is an example that would need to be customized with the above values. 
+
+```
+# notice the extra nats key here, must match the dependency name in Chart.yaml
+nats:
+  mqtt:
+    enabled: true
+  nats:
+  cluster:
+    enabled: true
+    # disable cluster advertisements when running behind a load balancer
+    noAdvertise: true
+  gateway:
+    enabled: true
+    name: us-west
+    noAdvertise: true
+    gateways:
+    - name: us-east
+      urls:
+      - nats://143.42.179.73:7522
+    - name: us-southeast
+      urls:
+      - nats://139.144.164.135:7522
+    - name: us-iad
+      urls:
+      - nats://139.144.195.154:7522
+ ```
+ 
+ 
 
 
 
