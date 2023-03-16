@@ -37,6 +37,7 @@ Before we deploy NATS.io and Prometheus (Prometheus collects and federates stati
 2. After the lb.yaml service is applied, query the cluster via kubectl to find the external IP address for both the Prometheus and NATS.io service for each cluster. Record these values for later.
 
 ```kubectl get svc prometheus-lb -o jsonpath="{.status.loadBalancer.ingress[*].ip}"```
+
 ```kubectl get svc natsio-lb -o jsonpath="{.status.loadBalancer.ingress[*].ip}"```
 
 ## Deploying NATS.io 
