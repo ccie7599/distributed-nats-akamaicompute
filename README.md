@@ -120,6 +120,8 @@ Once running, metrics can be scraped via a centralized prometheus collector and 
 
 ## Deploying a Grafana Dashboard 
 
+## Akamai Global Traffic Management Configuration
+
 ## Testing and Troubleshooting
  
 
