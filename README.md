@@ -99,7 +99,28 @@ nats:
       urls:
       - nats://139.144.195.154:7522
  ```
- 
+ 5. We can now install NATS.io via our local helm chart and per-region values file into each cluster. 
+
+```
+helm install --kubeconfig {kubeconfig for region} {regionID} mynats -f {per-region values yaml}
+```
+
+Once each region has NATS.io installed, validation and testing can be done and is explained elsewhere in this document. 
+
+## Installing Prometheus
+
+The public helm chart for NATS.io includes a Prometheus exporter. Enabling collection of metrics via Prometheus is very straightforward and can be done via installation of the public helm chart.
+
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install prometheus prometheus-community/prometheus   
+```
+
+Once running, metrics can be scraped via a centralized prometheus collector and server. The scraping endpoint would be ```http://{IPaddress):9090```, where `{IPAddress}` is the Prometheus load balancer IP recorded earlier. 
+
+## Deploying a Grafana Dashboard 
+
+## Testing and Troubleshooting
  
 
 
