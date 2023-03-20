@@ -4,6 +4,13 @@ This is a cookbook for deploying a meshed, distributed NATS.io cluster across mu
 
 ![image](https://user-images.githubusercontent.com/19197357/225468591-5e601e39-3e74-4437-a175-4645a261be87.png)
 
+![image](https://user-images.githubusercontent.com/19197357/226422977-33ceeff7-0d1e-44bc-bf0d-e71f130be5a7.png)
+
+![image](https://user-images.githubusercontent.com/19197357/226423075-acd8c580-b8a9-4b90-aec0-6235ffdeee2e.png)
+
+![image](https://user-images.githubusercontent.com/19197357/226423141-bc27fa70-e6d0-43c5-b676-c21250b1da46.png)
+
+
 NATS.io is a modern pub/sub protocol that can fulfill both legacy, MQTT-based use cases, as well as modern messaging applications that rely on NATS.io, connectors to event-based data platfoms such as Kafka, and application platforms such as HarperDB. In fact, HarperDB uses NATS.io for their own cluster synchronization, and can offer a more performant, featured version of this simple demo below.  
 
 Running NATS.io in a distributed manner across Akamai Cloud Compute can demonstrate the power of distributed computing that is well connected both horizontially and vertically across public Internet, for use cases throughout IoT, gaming, media, real-time data broadcast, data collection and processing, and many more. 
